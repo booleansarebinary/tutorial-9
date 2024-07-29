@@ -11,7 +11,50 @@ execute:
 
 library(tidyverse)
 library(primer.data)
+library(brms)
+library(tidybayes)
+library(gtsummary)
+```
 
+
+```{r}
+#| label: plot
+
+fit_all |>
+add_epred_draws(newdata = ndata) |>
+ggplot(aes(.epred, fill = sex)) + 
+geom_histogram(aes(y = after_stat(count/sum(count))), alpha = 0.5, bins = 100, position = "identity") + 
+scale_x_continuous(labels = scales::number_format(accuracy = 1)) + 
+scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+labs(
+title = "Posterior for Expected Years Lived Post-Election",
+subtitle = "Male candidates live longer",
+x = "Years",
+y = "Probability"
+)
+
+#a
+```
+
+
+We have data from 1945-2012 of deceased governor candidates in the US. We hope to forecast how long candidates live past the elections. One concern is that lifespans change over time.
+
+$$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + 
+\\ \beta_3 male_i *  c\_election\_age_i + \epsilon_i $$
+
+```{r}
+#| label: model
+#| cache: true
+df1 <- 
+governors |>
+select(last_name, year, state, sex, lived_after, election_age)
+
+fit_all <- brm(data = df1, formula = lived_after ~ sex*election_age, silent = 2, refresh = 0, seed = 13)
 
 ```
+
+```{r}
+tbl_regression(fit_all, intercept = TRUE)
+```
+
 

@@ -34,6 +34,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="five-parameters_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="five-parameters_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -62,7 +91,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
+<p>We have data from 1945-2012 of deceased governor candidates in the US. We hope to forecast how long candidates live past the elections. One concern is that lifespans change over time.</p>
+<p><span class="math display">\[ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i +
+\\ \beta_3 male_i *  c\_election\_age_i + \epsilon_i \]</span></p>
 
 </main>
 <!-- /main column -->
